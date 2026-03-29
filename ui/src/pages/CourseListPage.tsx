@@ -64,14 +64,14 @@ function CourseCard({ course, onDelete }: CourseCardProps) {
         <div className="course-meta">
           {course.startDate && (
             <span className="meta-item">
-              📅 {new Date(course.startDate).toLocaleDateString('lt-LT')}
+              {new Date(course.startDate).toLocaleDateString('lt-LT')}
             </span>
           )}
           {course.room && (
-            <span className="meta-item">🏫 {course.room}</span>
+            <span className="meta-item">{course.room}</span>
           )}
           <span className="meta-item">
-            🎓 {course.studentCount}
+            {course.studentCount}
             {course.maxStudents != null ? ` / ${course.maxStudents}` : ''} enrolled
           </span>
         </div>
