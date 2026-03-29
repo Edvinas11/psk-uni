@@ -1,0 +1,227 @@
+.course-detail-page {}
+
+.back-link {
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.back-link a {
+  color: #888;
+}
+
+.back-link a:hover {
+  color: #111;
+}
+
+.course-detail-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.course-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.course-detail-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 0.5rem;
+}
+
+.course-departments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.department-badge {
+  background: #f5f5f5;
+  color: #555;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid #ddd;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-lg {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.course-detail-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.meta-row {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: #888;
+  min-width: 90px;
+}
+
+.spots-badge {
+  display: inline-block;
+  margin-left: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #ddd;
+}
+
+.spots-badge.ok { background: #f5f5f5; color: #333; }
+.spots-badge.low { background: #f5f5f5; color: #333; }
+.spots-badge.full { background: #111; color: #fff; }
+
+.course-detail-description {
+  color: #555;
+  line-height: 1.7;
+  border-top: 1px solid #eee;
+  padding-top: 1.25rem;
+}
+
+.students-section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 2rem;
+}
+
+.students-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.student-count {
+  background: #111;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+}
+
+.empty-students {
+  text-align: center;
+  padding: 2.5rem;
+  color: #888;
+}
+
+.empty-students p {
+  margin-bottom: 1rem;
+}
+
+.students-table-wrapper {
+  overflow-x: auto;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.students-table th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  color: #888;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid #111;
+}
+
+.students-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.students-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.students-table tbody tr:hover td {
+  background: #fafafa;
+}
+
+.row-num {
+  color: #bbb;
+  font-size: 0.8rem;
+  width: 2.5rem;
+}
+
+.course-detail-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #111;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #333;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #111;
+  border: 1px solid #111;
+}
+
+.btn-danger {
+  background: transparent;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+.btn-danger:hover {
+  background: #111;
+  color: #fff;
+}
