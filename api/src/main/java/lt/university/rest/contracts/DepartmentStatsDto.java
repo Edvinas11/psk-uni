@@ -10,5 +10,6 @@ import java.util.List;
 public class DepartmentStatsDto {
     private Integer id;
     private String name;
+    private Integer courseCount;
     private List<StudentDto> students;
 }

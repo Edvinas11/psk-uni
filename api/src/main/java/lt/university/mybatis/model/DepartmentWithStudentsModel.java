@@ -11,5 +11,6 @@ public class DepartmentWithStudentsModel {
 
     private Integer id;
     private String name;
+    private Integer courseCount;
     private List<StudentModel> students;
 }

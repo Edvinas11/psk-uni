@@ -32,6 +32,7 @@
 }
 
 .stats-table th:nth-child(2),
+.stats-table th:nth-child(3),
 .stats-table td.count-cell {
   text-align: center;
 }

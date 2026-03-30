@@ -22,6 +22,7 @@ export default function DepartmentStatsPage() {
           <thead>
             <tr>
               <th>Department</th>
+              <th>Total Courses</th>
               <th>Total Students</th>
               <th>Students</th>
             </tr>
@@ -30,6 +31,7 @@ export default function DepartmentStatsPage() {
             {stats.map((row) => (
               <tr key={row.id}>
                 <td>{row.name}</td>
+                <td className="count-cell">{row.courseCount}</td>
                 <td className="count-cell">{row.students.length}</td>
                 <td>
                   {row.students.length === 0 ? (

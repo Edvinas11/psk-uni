@@ -35,8 +35,10 @@ public class Department implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Department department = (Department) o;
         return Objects.equals(id, department.id);
     }

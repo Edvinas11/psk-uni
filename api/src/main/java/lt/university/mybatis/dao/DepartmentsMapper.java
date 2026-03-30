@@ -13,6 +13,7 @@ public interface DepartmentsMapper {
         @Select("SELECT " +
                         "d.ID AS departmentId, " +
                         "d.NAME AS departmentName, " +
+                        "(SELECT COUNT(*) FROM COURSE_DEPARTMENT cd2 WHERE cd2.DEPARTMENT_ID = d.ID) AS courseCount, " +
                         "s.ID AS studentId, " +
                         "s.FIRST_NAME AS firstName, " +
                         "s.LAST_NAME AS lastName, " +

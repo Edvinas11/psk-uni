@@ -47,5 +47,6 @@ export interface DepartmentPayload {
 export interface DepartmentStatsDto {
   id: number
   name: string
+  courseCount: number
   students: StudentDto[]
 }

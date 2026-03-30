@@ -97,6 +97,7 @@ public class DepartmentsController {
         DepartmentStatsDto dto = new DepartmentStatsDto();
         dto.setId(model.getId());
         dto.setName(model.getName());
+        dto.setCourseCount(model.getCourseCount());
         dto.setStudents(model.getStudents().stream()
                 .map(this::toStudentDto)
                 .collect(Collectors.toList()));
