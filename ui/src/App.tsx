@@ -6,6 +6,7 @@ import EnrollPage from './pages/EnrollPage'
 import CreateCoursePage from './pages/CreateCoursePage'
 import EditCoursePage from './pages/EditCoursePage'
 import DepartmentStatsPage from './pages/DepartmentStatsPage'
+import DemoPage from './pages/DemoPage'
 import './App.css'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/courses/:id" element={<CourseDetailPage />} />
           <Route path="/courses/:id/enroll" element={<EnrollPage />} />
           <Route path="/departments/stats" element={<DepartmentStatsPage />} />
+          <Route path="/demo" element={<DemoPage />} />
         </Routes>
       </main>
     </div>

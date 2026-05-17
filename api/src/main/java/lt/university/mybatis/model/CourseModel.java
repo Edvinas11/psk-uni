@@ -17,6 +17,7 @@ public class CourseModel {
     private LocalDate startDate;
     private String room;
     private Integer maxStudents;
+    private Long version;
 
     private List<StudentModel> students = new ArrayList<>();
 

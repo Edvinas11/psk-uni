@@ -1,0 +1,113 @@
+.category-stats-page {}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 1.8rem;
+  color: #1a1a2e;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+.stats-table thead {
+  background: #4a6cf7;
+  color: white;
+}
+
+.stats-table th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-table th:nth-child(2),
+.stats-table td.count-cell {
+  text-align: center;
+}
+
+.stats-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+
+.stats-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.stats-table tbody tr:hover {
+  background: #f5f7ff;
+}
+
+.stats-table td {
+  padding: 0.9rem 1.25rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.count-cell {
+  font-weight: 700;
+  color: #4a6cf7;
+  font-size: 1.05rem;
+}
+
+.status-msg {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.status-msg.error {
+  color: #ef4444;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #888;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+}
+
+.participant-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.participant-list li {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.participant-email {
+  color: #888;
+  font-size: 0.82rem;
+}
+
+.no-participants {
+  color: #ccc;
+}
+
+.participants-more {
+  font-size: 0.82rem;
+  color: #4a6cf7;
+  font-weight: 600;
+}

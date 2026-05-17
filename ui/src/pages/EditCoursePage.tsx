@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useCourseForm } from '../hooks/useCourseForm'
+import { triggerOptimisticLock, forceSaveCourse } from '../api/university'
 import './CreateCoursePage.css'
 
 export default function EditCoursePage() {
@@ -10,15 +12,64 @@ export default function EditCoursePage() {
     loading,
     submitting,
     error,
+    conflict,
     fieldErrors,
     newDepartmentName,
     addingDepartment,
+    buildForceSavePayload,
     handleChange,
     handleDepartmentToggle,
     handleAddDepartment,
     handleSubmit,
     setNewDepartmentName,
+    setVersion,
+    refetch,
+    clearConflict,
   } = useCourseForm(id)
+
+  const [demoBusy, setDemoBusy] = useState(false)
+  const [demoMessage, setDemoMessage] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null)
+
+  async function handleTriggerOLE() {
+    if (!id) return
+    setDemoBusy(true)
+    setDemoMessage(null)
+    try {
+      const result = await triggerOptimisticLock(id)
+      if (result.outcome === 'OPTIMISTIC_LOCK') {
+        setDemoMessage({
+          kind: 'err',
+          text: `OptimisticLockException thrown. Stale version was ${result.staleVersion}, DB current version ${result.currentVersion}. The JTA tx was rolled back; recovery requires a fresh EM + new tx.`,
+        })
+      } else {
+        setDemoMessage({ kind: 'err', text: result.message ?? `Outcome: ${result.outcome}` })
+      }
+      await refetch()
+    } catch (err) {
+      setDemoMessage({ kind: 'err', text: (err as Error).message })
+    } finally {
+      setDemoBusy(false)
+    }
+  }
+
+  async function handleForceSave() {
+    if (!id) return
+    setDemoBusy(true)
+    setDemoMessage(null)
+    try {
+      const result = await forceSaveCourse(id, buildForceSavePayload())
+      setDemoMessage({
+        kind: 'ok',
+        text: `Force-saved on a fresh EntityManager + new JTA transaction. New version: ${result.currentVersion}.`,
+      })
+      setVersion(result.currentVersion ?? null)
+      clearConflict()
+    } catch (err) {
+      setDemoMessage({ kind: 'err', text: (err as Error).message })
+    } finally {
+      setDemoBusy(false)
+    }
+  }
 
   if (loading) return <div className="status-msg">Loading course...</div>
 
@@ -31,9 +82,37 @@ export default function EditCoursePage() {
       <div className="create-course-card">
         <div className="create-course-header">
           <h1>Edit Course</h1>
+          {formData.version != null && (
+            <span style={{ color: '#888', fontSize: 13 }}>
+              Form version: <code>{formData.version}</code>
+            </span>
+          )}
         </div>
 
         {error && <div className="form-error-banner">{error}</div>}
+        {conflict && (
+          <div
+            className="form-error-banner"
+            style={{ background: '#ffe6e6', color: '#a40000', borderColor: '#a40000' }}
+          >
+            <strong>409 Conflict:</strong> the course was changed by someone else (server version{' '}
+            <code>{conflict.currentVersion ?? '?'}</code>, your form had{' '}
+            <code>{formData.version ?? '?'}</code>). Click <em>Force Save</em> to overwrite using a
+            fresh EM + new JTA transaction, or reload the page to keep their changes.
+          </div>
+        )}
+        {demoMessage && (
+          <div
+            className="form-error-banner"
+            style={{
+              background: demoMessage.kind === 'ok' ? '#e6f8ec' : '#fff3e6',
+              color: demoMessage.kind === 'ok' ? '#0a5b1f' : '#8b3a00',
+              borderColor: demoMessage.kind === 'ok' ? '#0a5b1f' : '#8b3a00',
+            }}
+          >
+            {demoMessage.text}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
@@ -64,7 +143,7 @@ export default function EditCoursePage() {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="startDate">Start Date</label>
+              <label htmlFor="startDate">Date</label>
               <input
                 id="startDate"
                 type="date"
@@ -83,7 +162,7 @@ export default function EditCoursePage() {
                 name="maxStudents"
                 value={formData.maxStudents}
                 onChange={handleChange}
-                placeholder="30"
+                placeholder="100"
                 min="1"
                 className={fieldErrors.maxStudents ? 'input-error' : ''}
                 disabled={submitting}
@@ -112,15 +191,15 @@ export default function EditCoursePage() {
               <p className="no-departments-hint">No departments yet. Add one below.</p>
             ) : (
               <div className="department-checkboxes">
-                {departments.map((dep) => (
-                  <label key={dep.id} className="checkbox-label">
+                {departments.map((cat) => (
+                  <label key={cat.id} className="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={formData.departmentIds.includes(dep.id)}
-                      onChange={() => handleDepartmentToggle(dep.id)}
+                      checked={formData.departmentIds.includes(cat.id)}
+                      onChange={() => handleDepartmentToggle(cat.id)}
                       disabled={submitting}
                     />
-                    {dep.name}
+                    {cat.name}
                   </label>
                 ))}
               </div>
@@ -148,12 +227,30 @@ export default function EditCoursePage() {
             </div>
           </div>
 
-          <div className="form-actions">
+          <div className="form-actions" style={{ gap: 8, flexWrap: 'wrap' }}>
             <Link to={`/courses/${id}`} className="btn btn-secondary">
               Cancel
             </Link>
             <button type="submit" className="btn btn-primary" disabled={submitting}>
               {submitting ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={handleTriggerOLE}
+              disabled={demoBusy}
+              title="Server-side simulates a concurrent update so JPA throws OptimisticLockException"
+            >
+              {demoBusy ? '...' : 'Demo: trigger OLE'}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={handleForceSave}
+              disabled={demoBusy}
+              title="Recovery: fresh EM + new JTA tx, ignores stale version"
+            >
+              {demoBusy ? '...' : 'Force Save (recovery)'}
             </button>
           </div>
         </form>

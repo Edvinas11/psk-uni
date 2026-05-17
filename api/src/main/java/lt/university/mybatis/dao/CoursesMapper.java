@@ -21,7 +21,7 @@ public interface CoursesMapper {
                         "WHERE cd.COURSE_ID = #{courseId}")
         List<DepartmentModel> findDepartmentsByCourseId(Integer courseId);
 
-        @Select("SELECT ID, NAME, DESCRIPTION, START_DATE, ROOM, MAX_STUDENTS " +
+        @Select("SELECT ID, NAME, DESCRIPTION, START_DATE, ROOM, MAX_STUDENTS, VERSION " +
                         "FROM COURSE WHERE ID = #{id}")
         @Results({
                         @Result(property = "id", column = "ID", id = true),
@@ -30,6 +30,7 @@ public interface CoursesMapper {
                         @Result(property = "startDate", column = "START_DATE"),
                         @Result(property = "room", column = "ROOM"),
                         @Result(property = "maxStudents", column = "MAX_STUDENTS"),
+                        @Result(property = "version", column = "VERSION"),
                         @Result(property = "students", column = "ID", many = @Many(select = "lt.university.mybatis.dao.CoursesMapper.findStudentsByCourseId")),
                         @Result(property = "departments", column = "ID", many = @Many(select = "lt.university.mybatis.dao.CoursesMapper.findDepartmentsByCourseId"))
         })

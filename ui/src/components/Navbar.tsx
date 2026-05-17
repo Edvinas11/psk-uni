@@ -29,6 +29,12 @@ export default function Navbar() {
           >
             Department Stats
           </Link>
+          <Link
+            to="/demo"
+            className={`navbar-link ${location.pathname === '/demo' ? 'active' : ''}`}
+          >
+            CDI Demo
+          </Link>
         </div>
       </div>
     </nav>

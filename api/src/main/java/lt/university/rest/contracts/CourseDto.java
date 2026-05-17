@@ -15,6 +15,7 @@ public class CourseDto {
     private LocalDate startDate;
     private String room;
     private Integer maxStudents;
+    private Long version;
     private Integer studentCount;
     private List<DepartmentDto> departments;
     private List<StudentDto> students;

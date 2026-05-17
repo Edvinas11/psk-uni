@@ -1,0 +1,129 @@
+.register-page {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.back-link {
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.register-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+.register-header {
+  margin-bottom: 2rem;
+}
+
+.register-header h1 {
+  font-size: 1.6rem;
+  color: #1a1a2e;
+  margin-bottom: 0.35rem;
+}
+
+.event-name-subtitle {
+  color: #4a6cf7;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.form-error-banner {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: white;
+  color: #1a1a2e;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.12);
+}
+
+.form-group input.input-error,
+.form-group select.input-error,
+.form-group textarea.input-error {
+  border-color: #ef4444;
+}
+
+.form-group input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+.field-error {
+  font-size: 0.8rem;
+  color: #ef4444;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+/* Reuse btn classes from EventListPage */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  transition: background 0.15s, opacity 0.15s;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn:hover {
+  text-decoration: none;
+  opacity: 0.88;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary { background: #4a6cf7; color: white; }
+.btn-secondary { background: #e5e7eb; color: #374151; }
+.btn-outline { background: transparent; color: #4a6cf7; border: 1.5px solid #4a6cf7; }

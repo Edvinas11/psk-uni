@@ -1,5 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useCourse } from '../hooks/useCourse'
+import AsyncTaskRunner from '../components/AsyncTaskRunner'
+import AuditLogPanel from '../components/AuditLogPanel'
 import './CourseDetailPage.css'
 
 export default function CourseDetailPage() {
@@ -127,6 +129,9 @@ export default function CourseDetailPage() {
           </div>
         )}
       </div>
+
+      <AsyncTaskRunner />
+      <AuditLogPanel title="Server activity (audit log)" compact />
     </div>
   )
 }

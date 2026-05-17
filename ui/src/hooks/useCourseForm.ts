@@ -1,7 +1,14 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getCourse, getDepartments, createCourse, updateCourse, createDepartment } from '../api/university'
-import type { DepartmentDto, CreateCourseDto } from '../types/api'
+import {
+  getCourse,
+  getDepartments,
+  createCourse,
+  updateCourse,
+  createDepartment,
+} from '../api/university'
+import type { DepartmentDto, CreateCourseDto, ForceSaveCourseDto } from '../types/api'
+import { CourseConflictError } from '../types/api'
 
 export interface CourseFormData {
   name: string
@@ -10,6 +17,7 @@ export interface CourseFormData {
   room: string
   maxStudents: string
   departmentIds: number[]
+  version: number | null
 }
 
 type FieldErrors = Partial<Record<keyof CourseFormData, string>>
@@ -21,6 +29,11 @@ const EMPTY_FORM: CourseFormData = {
   room: '',
   maxStudents: '',
   departmentIds: [],
+  version: null,
+}
+
+export interface ConflictInfo {
+  currentVersion: number | null
 }
 
 export interface UseCourseFormResult {
@@ -29,14 +42,19 @@ export interface UseCourseFormResult {
   loading: boolean
   submitting: boolean
   error: string | null
+  conflict: ConflictInfo | null
   fieldErrors: FieldErrors
   newDepartmentName: string
   addingDepartment: boolean
+  buildForceSavePayload: () => ForceSaveCourseDto
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   handleDepartmentToggle: (departmentId: number) => void
   handleAddDepartment: (e: FormEvent) => Promise<void>
   handleSubmit: (e: FormEvent) => Promise<void>
   setNewDepartmentName: (value: string) => void
+  setVersion: (version: number | null) => void
+  refetch: () => Promise<void>
+  clearConflict: () => void
 }
 
 function validate(formData: CourseFormData): FieldErrors {
@@ -55,34 +73,42 @@ export function useCourseForm(courseId?: string): UseCourseFormResult {
   const [loading, setLoading] = useState(!!courseId)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [conflict, setConflict] = useState<ConflictInfo | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [newDepartmentName, setNewDepartmentName] = useState('')
   const [addingDepartment, setAddingDepartment] = useState(false)
 
+  async function loadFromServer() {
+    if (!courseId) return
+    setLoading(true)
+    try {
+      const [course, deps] = await Promise.all([getCourse(courseId), getDepartments()])
+      setFormData({
+        name: course.name ?? '',
+        description: course.description ?? '',
+        startDate: course.startDate ?? '',
+        room: course.room ?? '',
+        maxStudents: course.maxStudents != null ? String(course.maxStudents) : '',
+        departmentIds: (course.departments ?? []).map((d) => d.id),
+        version: course.version ?? null,
+      })
+      setDepartments(deps)
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (courseId) {
-      Promise.all([getCourse(courseId), getDepartments()])
-        .then(([course, deps]) => {
-          setFormData({
-            name: course.name ?? '',
-            description: course.description ?? '',
-            startDate: course.startDate ?? '',
-            room: course.room ?? '',
-            maxStudents: course.maxStudents != null ? String(course.maxStudents) : '',
-            departmentIds: (course.departments ?? []).map((d) => d.id),
-          })
-          setDepartments(deps)
-          setLoading(false)
-        })
-        .catch((err: Error) => {
-          setError(err.message)
-          setLoading(false)
-        })
+      void loadFromServer()
     } else {
       getDepartments()
         .then(setDepartments)
         .catch(() => {})
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId])
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -117,9 +143,28 @@ export function useCourseForm(courseId?: string): UseCourseFormResult {
     }
   }
 
+  function buildForceSavePayload(): ForceSaveCourseDto {
+    return {
+      name: formData.name,
+      description: formData.description || null,
+      maxStudents: formData.maxStudents ? Number(formData.maxStudents) : null,
+      startDate: formData.startDate || null,
+      room: formData.room || null,
+    }
+  }
+
+  function setVersion(version: number | null) {
+    setFormData((prev) => ({ ...prev, version }))
+  }
+
+  function clearConflict() {
+    setConflict(null)
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError(null)
+    setConflict(null)
 
     const errors = validate(formData)
     if (Object.keys(errors).length > 0) {
@@ -139,14 +184,19 @@ export function useCourseForm(courseId?: string): UseCourseFormResult {
     setSubmitting(true)
     try {
       if (courseId) {
-        await updateCourse(courseId, payload)
+        const saved = await updateCourse(courseId, payload)
+        setVersion(saved.version ?? null)
         navigate(`/courses/${courseId}`)
       } else {
         const created = await createCourse(payload)
         navigate(`/courses/${created.id}`)
       }
     } catch (err) {
-      setError((err as Error).message)
+      if (err instanceof CourseConflictError) {
+        setConflict({ currentVersion: err.currentVersion })
+      } else {
+        setError((err as Error).message)
+      }
       setSubmitting(false)
     }
   }
@@ -157,13 +207,18 @@ export function useCourseForm(courseId?: string): UseCourseFormResult {
     loading,
     submitting,
     error,
+    conflict,
     fieldErrors,
     newDepartmentName,
     addingDepartment,
+    buildForceSavePayload,
     handleChange,
     handleDepartmentToggle,
     handleAddDepartment,
     handleSubmit,
     setNewDepartmentName,
+    setVersion,
+    refetch: loadFromServer,
+    clearConflict,
   }
 }

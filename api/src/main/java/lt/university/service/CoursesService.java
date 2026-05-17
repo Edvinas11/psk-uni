@@ -69,6 +69,7 @@ public class CoursesService {
             course.getDepartments().addAll(departments);
         }
         coursesDAO.persist(course);
+        initializeLazyCollections(course);
         return course;
     }
 
@@ -90,7 +91,14 @@ public class CoursesService {
             existing.getDepartments().addAll(departmentsDAO.findByIds(departmentIds));
         }
 
+        initializeLazyCollections(existing);
         return existing;
+    }
+
+    /** Force-load collections while the JPA session is still open (before REST mapping). */
+    private void initializeLazyCollections(Course course) {
+        course.getStudents().size();
+        course.getDepartments().size();
     }
 
     @Transactional

@@ -36,6 +36,10 @@ public class Course implements Serializable {
     @Column(name = "MAX_STUDENTS")
     private Integer maxStudents;
 
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Student> students = new ArrayList<>();
 

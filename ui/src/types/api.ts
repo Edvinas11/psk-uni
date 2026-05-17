@@ -18,6 +18,7 @@ export interface CourseDto {
   startDate: string | null
   room: string | null
   maxStudents: number | null
+  version: number | null
   studentCount: number
   departments: DepartmentDto[]
   students: StudentDto[]
@@ -34,6 +35,15 @@ export interface CreateCourseDto {
 
 export type UpdateCourseDto = CreateCourseDto
 
+/** POST /api/demo/force-save/{id} body */
+export interface ForceSaveCourseDto {
+  name: string
+  description: string | null
+  startDate: string | null
+  room: string | null
+  maxStudents: number | null
+}
+
 export interface EnrollStudentDto {
   firstName: string
   lastName: string
@@ -49,4 +59,42 @@ export interface DepartmentStatsDto {
   name: string
   courseCount: number
   students: StudentDto[]
+}
+
+export interface AsyncTaskDto {
+  taskId: string
+  status: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED'
+  progress: number
+  result: string | null
+  error: string | null
+  createdAt: string
+  finishedAt: string | null
+}
+
+export interface AuditEntryDto {
+  seq: number
+  at: string
+  source: string
+  message: string
+}
+
+export interface OptimisticLockDemoResultDto {
+  outcome: string
+  staleVersion: number | null
+  currentVersion: number | null
+  message: string
+}
+
+export interface NotificationImplDto {
+  className: string
+  simpleName: string
+}
+
+export class CourseConflictError extends Error {
+  currentVersion: number | null
+  constructor(currentVersion: number | null) {
+    super('Stale course version')
+    this.name = 'CourseConflictError'
+    this.currentVersion = currentVersion
+  }
 }

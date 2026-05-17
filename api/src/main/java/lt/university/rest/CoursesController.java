@@ -139,6 +139,7 @@ public class CoursesController {
         dto.setStartDate(course.getStartDate());
         dto.setRoom(course.getRoom());
         dto.setMaxStudents(course.getMaxStudents());
+        dto.setVersion(course.getVersion());
         dto.setStudentCount(course.getStudents().size());
         dto.setDepartments(course.getDepartments().stream()
                 .map(d -> {
@@ -159,6 +160,7 @@ public class CoursesController {
         dto.setStartDate(course.getStartDate());
         dto.setRoom(course.getRoom());
         dto.setMaxStudents(course.getMaxStudents());
+        dto.setVersion(course.getVersion());
         dto.setStudentCount(course.getStudents().size());
         dto.setDepartments(course.getDepartments().stream()
                 .map(this::toDepartmentDto)
